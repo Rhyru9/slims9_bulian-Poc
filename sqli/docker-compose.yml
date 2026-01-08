@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  slims:
+    build: .
+    container_name: slims_test
+    ports:
+      - "8080:80"
+    depends_on:
+      - db
+    networks:
+      - test_network
+    restart: unless-stopped
+
+  db:
+    image: mariadb:10.6
+    container_name: slims_db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: senayandb
+      MYSQL_USER: slims
+      MYSQL_PASSWORD: slims
+    ports:
+      - "3306:3306"
+    networks:
+      - test_network
+    restart: unless-stopped
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+
+networks:
+  test_network:
+    driver: bridge
